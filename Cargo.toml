@@ -8,3 +8,4 @@ authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 log4rs = "0.3"
 rustc-serialize = "0.3"
 vault = "0.1"
+getopts = "0.2"
