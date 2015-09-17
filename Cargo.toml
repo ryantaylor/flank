@@ -1,0 +1,4 @@
+[package]
+name = "flank"
+version = "0.1.0"
+authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
