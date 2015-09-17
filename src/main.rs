@@ -20,11 +20,17 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optflag("l", "log", "enable logging to stdout");
+    opts.optflag("h", "help", "print this help menu");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(mtch) => mtch,
         Err(err) => panic!(err.to_string()),
     };
+
+    if matches.opt_present("h") {
+        print_usage(&program, opts);
+        return;
+    }
 
     if matches.opt_present("l") {
         log4rs::init_file("log.toml", Default::default()).unwrap();
@@ -33,6 +39,7 @@ fn main() {
     let input = if !matches.free.is_empty() {
         matches.free[0].clone()
     } else {
+        print_usage(&program, opts);
         return;
     };
 
@@ -45,4 +52,9 @@ fn main() {
     let encoded = json::encode(&replay).unwrap();
     //let encoded = replay.to_json();
     println!("{}", encoded);
+}
+
+fn print_usage(program: &str, opts: Options) {
+    let brief = format!("Usage: {} [options] FILE", program);
+    print!("{}", opts.usage(&brief));
 }
