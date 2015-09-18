@@ -5,5 +5,5 @@ kind = "console"
 pattern = "%d{%H:%M:%S} [%l] %f: %m"
 
 [root]
-level = "warn"
+level = "info"
 appenders = ["stdout"]

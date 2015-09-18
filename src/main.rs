@@ -13,6 +13,7 @@ use rustc_serialize::json;
 use getopts::Options;
 
 use vault::replay::Replay;
+use vault::utils;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -20,12 +21,18 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optflag("l", "log", "enable logging to stdout");
+    opts.optflag("v", "version", "print version information");
     opts.optflag("h", "help", "print this help menu");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(mtch) => mtch,
         Err(err) => panic!(err.to_string()),
     };
+
+    if matches.opt_present("v") {
+        print_version();
+        return;
+    }
 
     if matches.opt_present("h") {
         print_usage(&program, opts);
@@ -57,4 +64,9 @@ fn main() {
 fn print_usage(program: &str, opts: Options) {
     let brief = format!("Usage: {} [options] FILE", program);
     print!("{}", opts.usage(&brief));
+}
+
+fn print_version() {
+    println!("flank v0.1.2");
+    utils::print_version();
 }
