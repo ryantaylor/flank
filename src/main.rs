@@ -83,6 +83,6 @@ fn print_usage(program: &str, opts: Options) {
 }
 
 fn print_version() {
-    println!("flank v0.1.2");
+    println!("flank v0.1.3");
     vault::print_version();
 }
