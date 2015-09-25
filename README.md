@@ -6,7 +6,7 @@ I've only tested `flank` on Linux, but it should work fine on other platforms pr
 
 ## File & Version Support
 
-`flank` supports every filetype and CoH2 version that [vault](https://github.com/ryantaylor/vault) does. Currently that means `.rec` files, `.zip` files, and directories, and replays from CoH2 versions 19545 and higher.
+`flank` supports every filetype and CoH2 version that [vault](https://github.com/ryantaylor/vault#file--version-support) does. Currently that means `.rec` files, `.zip` files, and directories, and replays from CoH2 versions 19545 and higher.
 
 # Usage
 
@@ -25,7 +25,7 @@ $ export PATH="${PATH}:/path/to/flank/target/release"
 
 You should then be able to run `flank`:
 
-```bash
+```
 $ flank
 Usage: flank [options] FILE
 
@@ -38,7 +38,7 @@ Options:
 
 Parsing a file is easy, just pass the path to `flank`:
 
-```bash
+```
 $ flank /path/to/replay.rec
 ```
 
@@ -233,7 +233,7 @@ $ mkdir .flank && cd .flank
 $ touch log.toml
 ```
 
-You can then edit log.toml with a logging configuration. `flank` uses [log4rs](https://github.com/sfackler/log4rs), so any valid `log4rs` configurations will work, such as this simple config that outputs logging to stdout:
+You can then edit `log.toml` with a logging configuration. `flank` uses [log4rs](https://github.com/sfackler/log4rs), so any valid `log4rs` configurations will work, such as this simple config that outputs logging to `stdout`:
 
 ```toml
 refresh_rate = 99999
@@ -249,6 +249,6 @@ appenders = ["stdout"]
 
 You can then run `flank` with the `-l` flag to enable logging:
 
-```bash
+```
 $ flank -l /path/to/replay.rec
 ```
