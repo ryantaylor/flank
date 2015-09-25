@@ -252,3 +252,7 @@ You can then run `flank` with the `-l` flag to enable logging:
 ```
 $ flank -l /path/to/replay.rec
 ```
+
+# License
+
+MIT
