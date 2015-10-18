@@ -18,6 +18,7 @@ fn main() {
     let program = args[0].clone();
 
     let mut opts = Options::new();
+    opts.optopt("c", "cmdout", "write command info to stdout", "PLAYERID");
     opts.optflag("l", "log", "enable logging to stdout");
     opts.optflag("a", "array", "output replays as array inside wrapper JSON object");
     opts.optflag("v", "version", "print version information");
@@ -67,11 +68,43 @@ fn main() {
         }
     };
 
-    if matches.opt_present("a") {
+    if let Some(pid) = matches.opt_str("c") {
+        match pid.as_ref() {
+            "all" => {
+                for replay in &results.replays {
+                    println!("{}", replay.filename());
+                    for (_, player) in &replay.players {
+                        for command in &player.commands {
+                            command.display();
+                        }
+                    }
+                }
+            },
+            _ => {
+                let id = match pid.parse::<u8>() {
+                    Ok(val) => val,
+                    Err(err) => {
+                        println!("{}", err);
+                        return;
+                    }
+                };
+
+                for replay in &results.replays {
+                    println!("{}", replay.filename());
+                    if let Some(player) = replay.players.get(&id) {
+                        for command in &player.commands {
+                            command.display();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if matches.opt_present("a") {
         println!("{}", results.to_json().unwrap());
     }
     else {
-        for replay in results.replays().iter() {
+        for replay in results.replays.iter() {
             println!("{}", replay.to_json().unwrap());
         }
     }
