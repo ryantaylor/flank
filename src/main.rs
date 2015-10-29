@@ -1,4 +1,8 @@
 // main.rs
+
+#![cfg_attr(feature = "dev", feature(plugin))]
+#![cfg_attr(feature = "dev", plugin(clippy))]
+
 #[macro_use]
 extern crate log4rs;
 extern crate rustc_serialize;
