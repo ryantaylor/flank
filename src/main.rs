@@ -19,6 +19,7 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optopt("c", "cmdout", "write command info to stdout", "PLAYERID");
+    opts.optflag("p", "cpm", "write command per minute information to stdout");
     opts.optflag("l", "log", "enable logging to stdout");
     opts.optflag("a", "array", "output replays as array inside wrapper JSON object");
     opts.optflag("v", "version", "print version information");
@@ -72,7 +73,6 @@ fn main() {
         match pid.as_ref() {
             "all" => {
                 for replay in &results.replays {
-                    println!("{}", replay.filename());
                     for (_, player) in &replay.players {
                         for command in &player.commands {
                             command.display();
@@ -90,7 +90,6 @@ fn main() {
                 };
 
                 for replay in &results.replays {
-                    println!("{}", replay.filename());
                     if let Some(player) = replay.players.get(&id) {
                         for command in &player.commands {
                             command.display();
@@ -103,8 +102,16 @@ fn main() {
     else if matches.opt_present("a") {
         println!("{}", results.to_json().unwrap());
     }
+    else if matches.opt_present("p") {
+        for replay in &results.replays {
+            println!("ticks: {}", replay.duration);
+            for (_, player) in &replay.players {
+                println!("P{} - cmd: {} cpm: {}", player.id, player.commands.len(), player.cpm);
+            }
+        }
+    }
     else {
-        for replay in results.replays.iter() {
+        for replay in &results.replays {
             println!("{}", replay.to_json().unwrap());
         }
     }
