@@ -127,6 +127,6 @@ fn print_usage(program: &str, opts: Options) {
 }
 
 fn print_version() {
-    println!("flank v0.1.3");
+    println!("flank v{}", env!("CARGO_PKG_VERSION"));
     vault::print_version();
 }
