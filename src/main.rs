@@ -27,6 +27,7 @@ fn main() {
     opts.optflag("p", "cpm", "write command per minute information to stdout");
     opts.optflag("l", "log", "enable logging to stdout");
     opts.optflag("a", "array", "output replays as array inside wrapper JSON object");
+    opts.optflag("s", "strict", "reject input without a valid file extension");
     opts.optflag("v", "version", "print version information");
     opts.optflag("h", "help", "print this help menu");
 
@@ -44,6 +45,8 @@ fn main() {
         print_usage(&program, opts);
         return;
     }
+
+    let strict = matches.opt_present("s");
 
     if matches.opt_present("l") {
         match env::home_dir() {
@@ -66,7 +69,7 @@ fn main() {
 
     // Create a path to the desired file
     let path = Path::new(&input);
-    let mut results = match Vault::parse(&path) {
+    let mut results = match Vault::parse(&path, strict) {
         Ok(vault) => vault,
         Err(err) => {
             println!("{}", err);
