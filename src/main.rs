@@ -23,6 +23,7 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optopt("c", "cmdout", "write command info to stdout", "PLAYERID");
+    opts.optflag("n", "nocmd", "cleans command structures before writing output");
     opts.optflag("p", "cpm", "write command per minute information to stdout");
     opts.optflag("l", "log", "enable logging to stdout");
     opts.optflag("a", "array", "output replays as array inside wrapper JSON object");
@@ -65,7 +66,7 @@ fn main() {
 
     // Create a path to the desired file
     let path = Path::new(&input);
-    let results = match Vault::parse(&path) {
+    let mut results = match Vault::parse(&path) {
         Ok(vault) => vault,
         Err(err) => {
             println!("{}", err);
@@ -112,6 +113,14 @@ fn main() {
             for (_, player) in &replay.players {
                 println!("P{} - cmd: {} cpm: {}", player.id, player.commands.len(), player.cpm);
             }
+        }
+    }
+    else if matches.opt_present("n") {
+        for replay in &mut results.replays {
+            for (_, player) in &mut replay.players {
+                player.commands = Vec::new();
+            }
+            println!("{}", replay.to_json().unwrap());
         }
     }
     else {
