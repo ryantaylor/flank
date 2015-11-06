@@ -2,11 +2,11 @@
 name = "flank"
 version = "0.2.1"
 dependencies = [
- "clippy 0.0.22 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clippy 0.0.23 (registry+https://github.com/rust-lang/crates.io-index)",
  "getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "log4rs 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "vault 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vault 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -38,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "clippy"
-version = "0.0.22"
+version = "0.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "unicode-normalization 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -153,7 +153,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "vault"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "log 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
