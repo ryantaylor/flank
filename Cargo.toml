@@ -1,12 +1,12 @@
 [package]
 name = "flank"
-version = "0.2.2"
+version = "0.3.0"
 authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
 log4rs = "0.3"
 rustc-serialize = "0.3"
-vault = "0.2"
+vault = "0.3"
 getopts = "0.2"
 
 [dependencies.clippy]

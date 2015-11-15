@@ -16,6 +16,7 @@ use std::path::Path;
 use getopts::Options;
 
 use vault::Vault;
+use vault::Config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -47,6 +48,8 @@ fn main() {
     }
 
     let strict = matches.opt_present("s");
+    let commands = !matches.opt_present("n");
+    let command_bytes = matches.opt_present("c");
 
     if matches.opt_present("l") {
         match env::home_dir() {
@@ -69,7 +72,8 @@ fn main() {
 
     // Create a path to the desired file
     let path = Path::new(&input);
-    let mut results = match Vault::parse(&path, strict) {
+    let config = Config::new(strict, commands, command_bytes);
+    let results = match Vault::parse_with_config(&path, config) {
         Ok(vault) => vault,
         Err(err) => {
             println!("{}", err);
@@ -118,14 +122,14 @@ fn main() {
             }
         }
     }
-    else if matches.opt_present("n") {
-        for replay in &mut results.replays {
-            for (_, player) in &mut replay.players {
-                player.commands = Vec::new();
-            }
-            println!("{}", replay.to_json().unwrap());
-        }
-    }
+    // else if matches.opt_present("n") {
+    //     for replay in &mut results.replays {
+    //         for (_, player) in &mut replay.players {
+    //             player.commands = Vec::new();
+    //         }
+    //         println!("{}", replay.to_json().unwrap());
+    //     }
+    // }
     else {
         for replay in &results.replays {
             println!("{}", replay.to_json().unwrap());
