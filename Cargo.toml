@@ -1,13 +1,15 @@
 [package]
 name = "flank"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
+getopts = "0.2"
 log4rs = "0.3"
+nom = "~1.0.0"
+postgres = "0.10"
 rustc-serialize = "0.3"
 vault = "0.3"
-getopts = "0.2"
 
 [dependencies.clippy]
 version = "*"

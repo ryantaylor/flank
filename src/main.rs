@@ -3,17 +3,27 @@
 #![cfg_attr(feature = "dev", feature(plugin))]
 #![cfg_attr(feature = "dev", plugin(clippy))]
 
+extern crate getopts;
 #[macro_use]
 extern crate log4rs;
+#[macro_use]
+extern crate nom;
+extern crate postgres;
 extern crate rustc_serialize;
 extern crate vault;
-extern crate getopts;
 
+use std::collections::HashMap;
 use std::default::Default;
 use std::env;
+use std::fs::File;
+use std::io::Read;
 use std::path::Path;
+use std::str::{FromStr, from_utf8_unchecked};
 
 use getopts::Options;
+use nom::{digit, eof, not_line_ending, space};
+use nom::IResult::*;
+use postgres::{Connection, SslMode};
 
 use vault::Vault;
 use vault::Config;
@@ -24,6 +34,7 @@ fn main() {
 
     let mut opts = Options::new();
     opts.optopt("c", "cmdout", "write command info to stdout", "PLAYERID");
+    opts.optopt("d", "db", "update blueprints in database", "BLUEPRINTS");
     opts.optflag("n", "nocmd", "cleans command structures before writing output");
     opts.optflag("p", "cpm", "write command per minute information to stdout");
     opts.optflag("l", "log", "enable logging to stdout");
@@ -44,6 +55,11 @@ fn main() {
 
     if matches.opt_present("h") {
         print_usage(&program, opts);
+        return;
+    }
+
+    if let Some(blueprints) = matches.opt_str("d") {
+        parse_blueprints(&blueprints);
         return;
     }
 
@@ -145,4 +161,107 @@ fn print_usage(program: &str, opts: Options) {
 fn print_version() {
     println!("flank v{}", env!("CARGO_PKG_VERSION"));
     vault::print_version();
+}
+
+fn parse_blueprints(blueprints: &str) {
+    let conn = Connection::connect("postgresql://ryan@localhost/cohdb", &SslMode::None).unwrap();
+    let mut entity_types: HashMap<i32, String> = HashMap::new();
+
+    let stmt = conn.prepare("SELECT * FROM \"ENTITY_TYPES\"").unwrap();
+    for row in stmt.query(&[]).unwrap() {
+        entity_types.insert(row.get(0), row.get(1));
+    }
+
+    //println!("loaded entity types...");
+
+    //println!("{}", blueprints);
+
+    let mut file = File::open(blueprints).unwrap();
+    let mut file_string = String::new();
+    file.read_to_string(&mut file_string).unwrap();
+
+    named!(parse_id <&[u8], i32>,
+        chain!(
+                tag!("ID:")                     ~
+                space?                          ~
+            id: map!(call!(digit), buf_to_i32)  ~
+                tag!(",")                       ~
+                space?,
+            || { id }
+        ));
+
+    named!(parse_type <&[u8], i32>,
+        chain!(
+                tag!("Type:")                   ~
+                space?                          ~
+            tp: map!(call!(digit), buf_to_i32)  ~
+                tag!(",")                       ~
+                space?,
+            || { tp }
+        ));
+
+    named!(parse_name <&[u8], String>,
+        chain!(
+                tag!("Name:")                   ~
+                space?                          ~
+            nm: map!(call!(not_line_ending), to_string),
+            || { nm.to_owned() }
+        ));
+
+    named!(eol, alt!(tag!("\r\n") | tag!("\n") | tag!("\u{2028}") | tag!("\u{2029}")));
+
+    named!(parse_entry <&[u8], (i32, i32, String)>,
+        chain!(
+                id: parse_id    ~
+                tp: parse_type  ~
+                nm: parse_name  ~
+                    alt!(eof | eol),
+                || {
+                    //println!("{} {} {}", id, tp, nm);
+                    (id, tp, nm)
+                }
+            ));
+
+    named!(parse <&[u8], (Vec<(i32, i32, String)>)>, many0!(parse_entry));
+
+    let blueprint_entries = match parse(&file_string.as_bytes()[..]) {
+        Done(_, entries) => entries,
+        _ => panic!(),
+    };
+
+    //println!("{}", blueprint_entries.len());
+
+    let mut num_entities = 0;
+    let mut num_entities_relevant = 0;
+    let mut num_entities_added = 0;
+
+    let stmt = conn.prepare("INSERT INTO \"ENTITIES\" (\"ID\", \"TYPE\", \"NAME\") VALUES ($1, $2, $3)").unwrap();
+
+    for (id, tp, nm) in blueprint_entries.into_iter() {
+        num_entities += 1;
+        if let Some(type_name) = entity_types.get(&tp) {
+            num_entities_relevant += 1;
+            let inserts = match stmt.execute(&[&id, &type_name, &nm]) {
+                Ok(num) => num,
+                _ => 0,
+            };
+            num_entities_added += inserts;
+        };
+    }
+
+    println!("entries found: {}", num_entities);
+    println!("relevant entries: {}", num_entities_relevant);
+    println!("entries added: {}", num_entities_added);
+}
+
+fn to_string(s: &[u8]) -> &str {
+    unsafe { from_utf8_unchecked(s) }
+}
+
+fn to_i32(s: &str) -> i32 {
+    FromStr::from_str(s).unwrap()
+}
+
+fn buf_to_i32(s: &[u8]) -> i32 {
+    to_i32(to_string(s))
 }
