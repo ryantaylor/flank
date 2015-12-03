@@ -36,6 +36,7 @@ fn main() {
     opts.optopt("c", "cmdout", "write command info to stdout", "PLAYERID");
     opts.optopt("d", "db", "update blueprints in database", "BLUEPRINTS");
     opts.optflag("n", "nocmd", "cleans command structures before writing output");
+    opts.optflag("w", "wipecmd", "parses commands but wipes them before display");
     opts.optflag("p", "cpm", "write command per minute information to stdout");
     opts.optflag("l", "log", "enable logging to stdout");
     opts.optflag("a", "array", "output replays as array inside wrapper JSON object");
@@ -89,7 +90,7 @@ fn main() {
     // Create a path to the desired file
     let path = Path::new(&input);
     let config = Config::new(strict, commands, command_bytes);
-    let results = match Vault::parse_with_config(&path, config) {
+    let mut results = match Vault::parse_with_config(&path, config) {
         Ok(vault) => vault,
         Err(err) => {
             println!("{}", err);
@@ -101,11 +102,16 @@ fn main() {
         match pid.as_ref() {
             "all" => {
                 for replay in &results.replays {
-                    for (_, player) in &replay.players {
-                        for command in &player.commands {
+                    for (_, commands) in &replay.commands {
+                        for command in commands {
                             command.display();
                         }
                     }
+                    // for (_, player) in &replay.players {
+                    //     for command in &player.commands {
+                    //         command.display();
+                    //     }
+                    // }
                 }
             },
             _ => {
@@ -118,11 +124,16 @@ fn main() {
                 };
 
                 for replay in &results.replays {
-                    if let Some(player) = replay.players.get(&id) {
-                        for command in &player.commands {
+                    if let Some(commands) = replay.commands.get(&id) {
+                        for command in commands {
                             command.display();
                         }
                     }
+                    // if let Some(player) = replay.players.get(&id) {
+                    //     for command in &player.commands {
+                    //         command.display();
+                    //     }
+                    // }
                 }
             }
         }
@@ -133,19 +144,17 @@ fn main() {
     else if matches.opt_present("p") {
         for replay in &results.replays {
             println!("ticks: {}", replay.duration);
-            for (_, player) in &replay.players {
-                println!("P{} - cmd: {} cpm: {}", player.id, player.commands.len(), player.cpm);
+            for player in &replay.players {
+                println!("P{} - {} - cpm: {}", player.id, player.name, player.cpm);
             }
         }
     }
-    // else if matches.opt_present("n") {
-    //     for replay in &mut results.replays {
-    //         for (_, player) in &mut replay.players {
-    //             player.commands = Vec::new();
-    //         }
-    //         println!("{}", replay.to_json().unwrap());
-    //     }
-    // }
+    else if matches.opt_present("w") {
+        for replay in &mut results.replays {
+            replay.commands = HashMap::new();
+            println!("{}", replay.to_json().unwrap());
+        }
+    }
     else {
         for replay in &results.replays {
             println!("{}", replay.to_json().unwrap());
