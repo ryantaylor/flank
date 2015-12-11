@@ -1,13 +1,14 @@
 [package]
 name = "flank"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
-getopts = "0.2"
+clap = "1"
+#getopts = "0.2"
 log4rs = "0.3"
-nom = "~1.0.0"
-postgres = "0.10"
+#nom = "~1.0.0"
+#postgres = "0.10"
 rustc-serialize = "0.3"
 vault = "0.4"
 
