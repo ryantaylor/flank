@@ -5,12 +5,9 @@ authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
 clap = "1"
-#getopts = "0.2"
 log4rs = "0.3"
-#nom = "~1.0.0"
-#postgres = "0.10"
 rustc-serialize = "0.3"
-vault = "0.4"
+vault = "1"
 
 [dependencies.clippy]
 version = "*"
