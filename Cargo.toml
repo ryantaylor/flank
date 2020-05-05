@@ -4,10 +4,11 @@ version = "0.5.0"
 authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
-clap = "1"
+clap = "2"
 log4rs = "0.3"
-rustc-serialize = "0.3"
+rustc-serialize = "0.3.24"
 vault = "1"
+winapi = "0.2.6"
 
 [dependencies.clippy]
 version = "*"
