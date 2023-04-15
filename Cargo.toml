@@ -1,18 +1,18 @@
 [package]
 name = "flank"
-version = "0.6.0"
-authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
+version = "1.0.0"
+edition = "2021"
+authors = ["Ryan Taylor <2320507+ryantaylor@users.noreply.github.com>"]
+
+description = "CLI parser for Company of Heroes replay files."
+homepage = "https://github.com/ryantaylor/flank"
+repository = "https://github.com/ryantaylor/flank"
+readme = "README.md"
+keywords = ["coh", "coh3", "company", "heroes", "replay"]
+license = "MIT"
 
 [dependencies]
-clap = "2"
-log4rs = "0.3"
-rustc-serialize = "0.3.24"
-vault = "1"
-winapi = "0.2.6"
-
-[dependencies.clippy]
-version = "*"
-optional = true
-
-[features]
-dev = ["clippy"]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+serde_json = "1.0"
+vault = { version = "2", features = ["serde"] }
