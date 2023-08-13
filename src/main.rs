@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use clap::Parser;
 use std::fs::File;
 use std::io::{BufReader, Read};
@@ -21,8 +21,12 @@ fn main() -> Result<()> {
 
     reader.read_to_end(&mut buffer)?;
 
-    let replay = Replay::from_bytes(&buffer).map_err(|_| anyhow!("Parsing failed!"))?;
-    let json = serde_json::to_string(&replay)?;
+    match Replay::from_bytes(&buffer) {
+        Ok(replay) => {
+            let json = serde_json::to_string(&replay)?;
 
-    Ok(println!("{}", json))
+            Ok(println!("{}", json))
+        }
+        Err(_) => Ok(println!("{{\"error\": \"Parsing failed!\"}}")),
+    }
 }

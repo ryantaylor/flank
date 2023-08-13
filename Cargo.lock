@@ -384,9 +384,9 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "vault"
-version = "2.1.1"
+version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd73cc586c0132d76b4f7b9ddbef9a222919d90c0720ef726cfd100cb8ff4c17"
+checksum = "57f13d25b120beed4d279bf11c1cab834225fe07a13ea9f001c5ff7c1f2eb20a"
 dependencies = [
  "byteorder",
  "nom",
