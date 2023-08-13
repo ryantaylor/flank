@@ -27,6 +27,6 @@ fn main() -> Result<()> {
 
             Ok(println!("{}", json))
         }
-        Err(_) => Ok(println!("{{\"error\": \"Parsing failed!\"}}")),
+        Err(_) => Ok(println!("{{\"error\":\"Parsing failed!\"}}")),
     }
 }
