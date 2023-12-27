@@ -160,9 +160,9 @@ dependencies = [
 
 [[package]]
 name = "nom-tracable"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "160767ce1eed2cdadc2256015a6dc51d9632226ea02e0f0ce4590b904e1d80e2"
+checksum = "6a39d3ec4e5bc9816ca540bd6b1e4885c0275536eb3293d317d984bb17f9a294"
 dependencies = [
  "nom",
  "nom-tracable-macros",
