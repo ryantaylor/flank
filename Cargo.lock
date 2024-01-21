@@ -116,7 +116,7 @@ checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
 
 [[package]]
 name = "flank"
-version = "2.2.0"
+version = "3.0.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -287,9 +287,9 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "vault"
-version = "6.0.0"
+version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "56d2f7e8331af1c81e0e894ae95960807789cfe849dcc95e828382f9f41b2959"
+checksum = "c883ce2ee65509850bbf77b935dac0d6876392de077138650de1f5d109381bd8"
 dependencies = [
  "byteorder",
  "nom",
