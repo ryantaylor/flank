@@ -304,9 +304,9 @@ dependencies = [
 
 [[package]]
 name = "vault"
-version = "10.1.4"
+version = "10.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b171e70209f0ef47c6bd335852c0861d576455b96b964b12561e7b7418364ac7"
+checksum = "03d77d68538d3b38e315ff1df3a1d186b44400804407820f80f77b72dd382d0a"
 dependencies = [
  "byteorder",
  "nom",
