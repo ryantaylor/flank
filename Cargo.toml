@@ -1,12 +1,12 @@
 [package]
 name = "flank"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["Ryan Taylor <ryan@ryantaylordev.ca>"]
 
 [dependencies]
 clap = "2"
 log4rs = "0.3"
-rustc-serialize = "0.3.24"
+rustc-serialize = "0.3.25"
 vault = "1"
 winapi = "0.2.6"
 
